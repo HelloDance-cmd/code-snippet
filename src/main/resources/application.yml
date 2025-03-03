@@ -5,7 +5,7 @@ spring:
     username: root
     password: wu272515.
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/snippet
+    url: jdbc:mysql://117.72.37.186:3306/snippet
 
 token:
   secretKey: Y29kZSBzbmlwcGV0IHdlYnNpdGUgZm9yIGV2ZXJ5b25lIG9mIGRldmVsb3Blcg==
@@ -16,3 +16,5 @@ server:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

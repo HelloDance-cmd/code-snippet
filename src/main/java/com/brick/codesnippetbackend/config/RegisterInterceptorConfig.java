@@ -26,7 +26,8 @@ public class RegisterInterceptorConfig implements WebMvcConfigurer
     public void addInterceptors(InterceptorRegistry registry)
     {
         registry.addInterceptor(responseWithTokenInterceptor)
-                .addPathPatterns("/user/**", "/snippet/**", "/dashboard/**");
+                .addPathPatterns("/user/**", "/snippet/**", "/dashboard/**")
+                .excludePathPatterns("/user/login", "/user/register");
 
         log.info("RegisterInterceptor addInterceptors");
     }
