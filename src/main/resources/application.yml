@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: CodeSnippetBackendApplication
+  datasource:
+    username: root
+    password: wu272515.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/snippet
+
+token:
+  secretKey: Y29kZSBzbmlwcGV0IHdlYnNpdGUgZm9yIGV2ZXJ5b25lIG9mIGRldmVsb3Blcg==
+  expireTime: 2400000  # 40 * 60 * 1000 for 40min
+
+server:
+  port: 8080
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
