@@ -1,15 +1,19 @@
 package com.brick.codesnippetbackend.vo;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 public class RegisterVo
 {
-    @NonNull
+    @NotNull
     private String username;
-    @NonNull
+    @NotNull
     private String password;
-    @NonNull
+
+    @Null
+    @Email(message = "邮箱格式不正确")
     private String email;
 }
