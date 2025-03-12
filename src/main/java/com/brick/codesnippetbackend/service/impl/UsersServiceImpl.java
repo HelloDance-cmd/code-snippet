@@ -2,18 +2,14 @@ package com.brick.codesnippetbackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.brick.codesnippetbackend.entity.Snippets;
 import com.brick.codesnippetbackend.entity.Users;
-import com.brick.codesnippetbackend.mapper.SnippetsMapper;
 import com.brick.codesnippetbackend.mapper.UsersMapper;
 import com.brick.codesnippetbackend.service.UsersService;
-import com.brick.codesnippetbackend.vo.RegisterVo;
-import com.brick.codesnippetbackend.vo.SnippetsVo;
+import com.brick.codesnippetbackend.dto.RegisterDto;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * @author wu-ji
@@ -43,7 +39,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
 
 
     @Override
-    public boolean insertUser(@NonNull RegisterVo registerVo)
+    public boolean insertUser(@NonNull RegisterDto registerVo)
     {
         Users users = Users.builder()
                 .username(registerVo.getUsername())

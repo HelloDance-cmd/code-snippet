@@ -1,4 +1,4 @@
-package com.brick.codesnippetbackend.vo;
+package com.brick.codesnippetbackend.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Null;
 import lombok.Data;
 
 @Data
-public class RegisterVo
+public class RegisterDto
 {
     @NotNull
     private String username;

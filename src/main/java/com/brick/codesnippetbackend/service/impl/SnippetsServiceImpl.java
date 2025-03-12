@@ -34,69 +34,26 @@ public class SnippetsServiceImpl extends ServiceImpl<SnippetsMapper, Snippets>
     {
         Integer userId = usersMapper.queryUserIdByUsername(userName);
         List<Snippets> snippets = snippetsMapper.selectList(new QueryWrapper<Snippets>().eq("user_id", userId));
-        return adjustStructure(snippets);
+        return adjustStructure(snippets, null);
     }
 
-    private List<SnippetsVo> adjustStructure(List<Snippets> snippets)
-    {
+    private List<SnippetsVo> adjustStructure(List<Snippets> snippets, String parentId) {
         List<SnippetsVo> ans = new ArrayList<>();
-        Stack<SnippetsVo> stack = new Stack<>();
-        HashMap<String, Boolean> map = new HashMap<>();
-
-        for (Snippets snippet : snippets)
-        {
-            if (map.get(snippet.getId()) != null)
-                continue;
-            stack.push(toSnippetVo(snippet));
-            String parentId = snippet.getParentId();
-
-            // Find an element is parentId = this
-            SnippetsVo obj = getParent(parentId, snippets);
-
-            // The element not have a parent element
-            if (Objects.isNull(obj))
-            {
-                SnippetsVo snip = stack.pop();
-                ans.add(snip);
-            } else
-            {
-                // The element have many parent
-                SnippetsVo first = stack.firstElement();
-                while (!stack.empty())
-                {
-                    SnippetsVo s = stack.pop();
-                    map.put(s.getSnippetID(), true);
-                    if (!stack.empty())
-                    {
-                        s.getChildren().add(stack.firstElement());
-                    }
-                }
-
-                ans.add(first);
+        for (Snippets snippet : snippets) {
+            String PId = snippet.getParentId();
+            if (PId != null && PId.equals(parentId) || PId == null && parentId == null) {
+                SnippetsVo snippetsVo = toSnippetVo(snippet);
+                snippetsVo.setChildren(adjustStructure(snippets, snippet.getId()));
+                ans.add(snippetsVo);
             }
         }
-
         return ans;
-    }
-
-    private SnippetsVo getParent(String parentId, List<Snippets> snippets)
-    {
-        for (Snippets snippet : snippets)
-        {
-            if (snippet.getId().equals(parentId))
-            {
-                return toSnippetVo(snippet);
-
-            }
-        }
-
-        return null;
     }
 
     public SnippetsVo toSnippetVo(Snippets snippet)
     {
         SnippetsVo snippetsVo = new SnippetsVo();
-
+        snippetsVo.setCreateAt(snippet.getCreatedAt());
         snippetsVo.setChildren(List.of());
         snippetsVo.setTitle(snippet.getTitle());
         snippetsVo.setSnippetID(snippet.getId());

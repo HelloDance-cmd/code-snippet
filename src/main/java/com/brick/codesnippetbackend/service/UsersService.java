@@ -2,12 +2,8 @@ package com.brick.codesnippetbackend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.brick.codesnippetbackend.entity.Users;
-import com.brick.codesnippetbackend.vo.RegisterVo;
-import com.brick.codesnippetbackend.vo.SnippetsVo;
+import com.brick.codesnippetbackend.dto.RegisterDto;
 import lombok.NonNull;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author wu-ji
@@ -18,7 +14,7 @@ public interface UsersService extends IService<Users>
 {
     boolean usernameExists(String username);
 
-    boolean insertUser(@NonNull RegisterVo registerVo);
+    boolean insertUser(@NonNull RegisterDto registerVo);
 
     boolean emailExists(@NonNull String email);
 }

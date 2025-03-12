@@ -50,8 +50,24 @@ public class ResponseWithTokenInterceptor implements HandlerInterceptor
 
             return false;
         }
+        boolean isExpired = jwtUtils.isExpired(request.getHeader("token"));
+        if (isExpired) {
+            log.info("Token is expired: {}", request.getServletPath());
+            JSONObject obj = JSONUtil.createObj();
+            obj.set("code", 401);
+            obj.set("data", "Token is expired");
 
-        return !jwtUtils.isExpired(
-                request.getHeader("token"));
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("text/plain; charset=UTF-8");
+            response.setStatus(401);
+            PrintWriter writer = response.getWriter();
+            writer.write(obj.toStringPretty());
+            writer.flush();
+            writer.close();
+            return false;
+        }
+
+        return true;
+
     }
 }

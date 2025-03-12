@@ -41,6 +41,8 @@ public class JWTUtil implements JWTCustomInterface
         // 生效时间
         payload.put(JWTPayload.NOT_BEFORE, now);
 
+        payload.put(JWTPayload.SUBJECT, subject);
+
         String token = cn.hutool.jwt.JWTUtil.createToken(payload, KEY.getBytes());
         log.info("生成JWT token：{}", token);
         return token;
@@ -68,6 +70,7 @@ public class JWTUtil implements JWTCustomInterface
                 .setKey(KEY.getBytes())
                 .getPayload()
                 .getClaimsJson()
+                .get(JWTPayload.SUBJECT)
                 .toString();
     }
 }

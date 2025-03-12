@@ -1,10 +1,10 @@
-package com.brick.codesnippetbackend.vo;
+package com.brick.codesnippetbackend.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class LoginVo
+public class LoginDto
 {
     @NotNull
     private String username;

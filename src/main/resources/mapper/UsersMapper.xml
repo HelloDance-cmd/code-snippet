@@ -7,6 +7,6 @@
     <select id="queryUserIdByUsername" resultType="java.lang.Integer">
         SELECT id
         FROM users
-        WHERE username = ${username}
+        WHERE username = #{username}
     </select>
 </mapper>

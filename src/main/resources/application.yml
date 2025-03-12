@@ -17,8 +17,8 @@ spring:
 
 token:
   secretKey: Y29kZSBzbmlwcGV0IHdlYnNpdGUgZm9yIGV2ZXJ5b25lIG9mIGRldmVsb3Blcg==
-#  expireTime: 2400000  # 40 * 60 * 1000 for 40min
-  expireTime: 10000
+  expireTime: 2400000  # 40 * 60 * 1000 for 40min
+#  expireTime: 10000
 server:
   port: 8080
 

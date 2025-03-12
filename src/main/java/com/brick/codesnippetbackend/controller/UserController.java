@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.brick.codesnippetbackend.entity.Users;
 import com.brick.codesnippetbackend.service.impl.UsersServiceImpl;
 import com.brick.codesnippetbackend.utils.JWTUtil;
-import com.brick.codesnippetbackend.vo.LoginVo;
-import com.brick.codesnippetbackend.vo.RegisterVo;
+import com.brick.codesnippetbackend.dto.LoginDto;
+import com.brick.codesnippetbackend.dto.RegisterDto;
 import com.brick.codesnippetbackend.vo.Result;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -44,14 +44,14 @@ public class UserController
     /**
      * 登录接口
      *
-     * @param loginVo 登录需要的信息
+     * @param loginDto 登录需要的信息
      * @return 返回提示信息，登录成功或者是失败。如果成功返回该用户的Token，如果失败返回失败信息
      */
     @PostMapping("/login")
-    public HttpEntity<Result<String>> login(@Valid @RequestBody LoginVo loginVo)
+    public HttpEntity<Result<String>> login(@Valid @RequestBody LoginDto loginDto)
     {
-        String username = loginVo.getUsername();
-        String password = loginVo.getPassword();
+        String username = loginDto.getUsername();
+        String password = loginDto.getPassword();
 
         if (!usersService.usernameExists(username))
         {
@@ -79,7 +79,7 @@ public class UserController
      * @return 注册成功或者是失败
      */
     @PostMapping("/register")
-    public HttpEntity<Result<String>> dashboard(@RequestBody RegisterVo registerVo)
+    public HttpEntity<Result<String>> dashboard(@RequestBody RegisterDto registerVo)
     {
 
         if (usersService.usernameExists(registerVo.getUsername()))
