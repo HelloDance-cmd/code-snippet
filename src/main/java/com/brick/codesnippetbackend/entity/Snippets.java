@@ -5,9 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
+
 import lombok.Data;
 
 /**
@@ -24,9 +25,9 @@ public class Snippets {
 
     private String content;
 
-    private Object language;
+    private String language;
 
-    private LocalTime createdAt;
+    private Date createdAt;
 
     private String parentId;
 }

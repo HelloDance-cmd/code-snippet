@@ -2,21 +2,23 @@ package com.brick.codesnippetbackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.brick.codesnippetbackend.dto.MultipleSnippetUploadDto;
+import com.brick.codesnippetbackend.dto.SimpleSnippet;
 import com.brick.codesnippetbackend.entity.Snippets;
 import com.brick.codesnippetbackend.entity.Users;
 import com.brick.codesnippetbackend.mapper.SnippetsMapper;
 import com.brick.codesnippetbackend.mapper.UsersMapper;
 import com.brick.codesnippetbackend.service.SnippetsService;
 import com.brick.codesnippetbackend.utils.JWTUtil;
+import com.brick.codesnippetbackend.utils.SnowflakeIdWorker;
 import com.brick.codesnippetbackend.vo.SnippetsVo;
-import org.apache.ibatis.executor.BatchResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,11 +32,14 @@ public class SnippetsServiceImpl extends ServiceImpl<SnippetsMapper, Snippets>
 	private final UsersMapper usersMapper;
 	private final SnippetsMapper snippetsMapper;
 	private final JWTUtil jwtUtil;
+	private final SnowflakeIdWorker snowflakeIdWorker;
 
-	public SnippetsServiceImpl(UsersMapper usersMapper, SnippetsMapper snippetsMapper, JWTUtil jwtUtil) {
+	public SnippetsServiceImpl(UsersMapper usersMapper, SnippetsMapper snippetsMapper,
+	                           JWTUtil jwtUtil, SnowflakeIdWorker snowflakeIdWorker) {
 		this.usersMapper = usersMapper;
 		this.snippetsMapper = snippetsMapper;
 		this.jwtUtil = jwtUtil;
+		this.snowflakeIdWorker = snowflakeIdWorker;
 	}
 
 	@Override
@@ -44,29 +49,21 @@ public class SnippetsServiceImpl extends ServiceImpl<SnippetsMapper, Snippets>
 		return adjustStructure(snippets, null);
 	}
 
-	/**
-	 * 当用户新建文件或者目录的时候
-	 * 向snippet表中添加数据
-	 *
-	 * @param uploadDto 新建的数据集包含文件和目录
-	 * @return 是否成功
-	 */
+
 	@Override
-	public Boolean insertSnippet(MultipleSnippetUploadDto uploadDto, String userToken) {
+	public Boolean insertSnippet(SimpleSnippet simpleSnippet, String userToken) {
 		String username = jwtUtil.extractToken(userToken);
 		Integer userId = usersMapper.selectOne(new QueryWrapper<Users>().eq("username", username)).getId();
 
-		List<Snippets> snippets = Arrays.stream(uploadDto.getSnippets())
-			.map(snippet -> {
-				Snippets snippetsEntity = new Snippets();
-				BeanUtils.copyProperties(snippet, snippetsEntity);
-				snippetsEntity.setCreatedAt(LocalTime.now());
-				snippetsEntity.setUserId(userId);
-				return snippetsEntity;
-			}).toList();
+		Snippets snippetsEntity = new Snippets();
+		BeanUtils.copyProperties(simpleSnippet, snippetsEntity);
+		snippetsEntity.setContent("");
+		String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		snippetsEntity.setCreatedAt(Date.valueOf(nowDate));
+		snippetsEntity.setUserId(userId);
+		snippetsEntity.setId(snowflakeIdWorker.nextIdStr());
 
-		int affectRows = snippetsMapper.insertOrUpdate(snippets).size();
-		return affectRows == uploadDto.getSnippets().length;
+		return snippetsMapper.insertOrUpdate(snippetsEntity);
 	}
 
 	private List<SnippetsVo> adjustStructure(List<Snippets> snippets, String parentId) {

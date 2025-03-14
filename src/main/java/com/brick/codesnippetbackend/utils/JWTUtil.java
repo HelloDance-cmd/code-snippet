@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class JWTUtil implements JWTCustomInterface
+public class JWTUtil
 {
     private String KEY;
     private Integer EXPIRE_TIME;
@@ -28,7 +28,6 @@ public class JWTUtil implements JWTCustomInterface
         log.info("KEY: {}, EXPIRE_TIME: {}", KEY, EXPIRE_TIME);
     }
 
-    @Override
     public String createToken(String subject)
     {
         DateTime now = DateTime.now();
@@ -49,7 +48,6 @@ public class JWTUtil implements JWTCustomInterface
     }
 
 
-    @Override
     public boolean isExpired(String token)
     {
         JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(token).setKey(KEY.getBytes());
@@ -63,7 +61,6 @@ public class JWTUtil implements JWTCustomInterface
         }
     }
 
-    @Override
     public String extractToken(String token)
     {
         return cn.hutool.jwt.JWTUtil.parseToken(token)

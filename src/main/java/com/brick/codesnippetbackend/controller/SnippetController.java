@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/snippet")
-public class SnippetController
-{
+public class SnippetController {
+
 }

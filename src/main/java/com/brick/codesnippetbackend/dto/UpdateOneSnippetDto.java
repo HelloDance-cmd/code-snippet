@@ -11,4 +11,6 @@ public class UpdateOneSnippetDto {
 	private String id;
 	@NotNull
 	private String content;
+	@NotNull
+	private String language;
 }

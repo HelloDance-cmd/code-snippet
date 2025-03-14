@@ -2,6 +2,7 @@ package com.brick.codesnippetbackend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.brick.codesnippetbackend.dto.MultipleSnippetUploadDto;
+import com.brick.codesnippetbackend.dto.SimpleSnippet;
 import com.brick.codesnippetbackend.entity.Snippets;
 import com.brick.codesnippetbackend.vo.SnippetsVo;
 
@@ -15,5 +16,5 @@ import java.util.List;
 public interface SnippetsService extends IService<Snippets> {
 	List<SnippetsVo> getFileStructure(String userName);
 
-	Boolean insertSnippet(MultipleSnippetUploadDto uploadDto, String userToken);
+	Boolean insertSnippet(SimpleSnippet simpleSnippet, String userToken);
 }
