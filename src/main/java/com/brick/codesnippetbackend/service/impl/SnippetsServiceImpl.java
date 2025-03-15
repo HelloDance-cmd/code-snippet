@@ -11,6 +11,7 @@ import com.brick.codesnippetbackend.service.SnippetsService;
 import com.brick.codesnippetbackend.utils.JWTUtil;
 import com.brick.codesnippetbackend.utils.SnowflakeIdWorker;
 import com.brick.codesnippetbackend.vo.SnippetsVo;
+import lombok.NonNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * @author wu-ji
@@ -49,6 +51,27 @@ public class SnippetsServiceImpl extends ServiceImpl<SnippetsMapper, Snippets>
 		return adjustStructure(snippets, null);
 	}
 
+
+	@Override
+	public List<String> getDirectories(@NonNull String username) {
+		List<SnippetsVo> snippets = getFileStructure(username);
+		List<String> ans = new ArrayList<>();
+
+		Stack<List<SnippetsVo>> stack = new Stack<>();
+		stack.push(snippets);
+
+		while (!stack.empty()) {
+			List<SnippetsVo> snippetsParam = stack.pop();
+			for (SnippetsVo snippetsVo : snippetsParam) {
+				if (!snippetsVo.getChildren().isEmpty()) {
+					ans.add(snippetsVo.getTitle());
+					stack.add(snippetsVo.getChildren());
+				}
+			}
+		}
+
+		return ans;
+	}
 
 	@Override
 	public Boolean insertSnippet(SimpleSnippet simpleSnippet, String userToken) {

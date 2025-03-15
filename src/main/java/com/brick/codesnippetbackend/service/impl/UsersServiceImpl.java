@@ -10,6 +10,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author wu-ji
@@ -20,6 +21,12 @@ import java.time.LocalDateTime;
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users>
         implements UsersService
 {
+    private final UsersMapper usersMapper;
+
+    public UsersServiceImpl(UsersMapper usersMapper) {
+        this.usersMapper = usersMapper;
+    }
+
     public boolean usernameExists(String username)
     {
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();

@@ -5,6 +5,8 @@ import com.brick.codesnippetbackend.entity.Users;
 import com.brick.codesnippetbackend.dto.RegisterDto;
 import lombok.NonNull;
 
+import java.util.List;
+
 /**
  * @author wu-ji
  * @description 针对表【users】的数据库操作Service
