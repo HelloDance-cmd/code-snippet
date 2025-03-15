@@ -1,7 +1,7 @@
 package com.brick.codesnippetbackend.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import entity.brick.UserLog;
+import com.brick.codesnippetbackend.entity.UserLog;
 import com.brick.codesnippetbackend.service.UserLogService;
 import com.brick.codesnippetbackend.mapper.UserLogMapper;
 import org.springframework.stereotype.Service;

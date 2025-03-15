@@ -1,6 +1,6 @@
 package com.brick.codesnippetbackend.service;
 
-import entity.brick.UserLog;
+import com.brick.codesnippetbackend.entity.UserLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
