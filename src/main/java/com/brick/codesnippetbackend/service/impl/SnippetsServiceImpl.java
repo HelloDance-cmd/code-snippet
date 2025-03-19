@@ -2,6 +2,7 @@ package com.brick.codesnippetbackend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.brick.codesnippetbackend.dto.DirectoryDto;
 import com.brick.codesnippetbackend.dto.SimpleSnippet;
 import com.brick.codesnippetbackend.entity.Snippets;
 import com.brick.codesnippetbackend.entity.Users;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -53,18 +54,29 @@ public class SnippetsServiceImpl extends ServiceImpl<SnippetsMapper, Snippets>
 
 
 	@Override
-	public List<String> getDirectories(@NonNull String username) {
+	public List<DirectoryDto> getDirectories(@NonNull String username) {
+		// It like following same
+		// [ xxx, xxx, children: []]
 		List<SnippetsVo> snippets = getFileStructure(username);
-		List<String> ans = new ArrayList<>();
+		List<DirectoryDto> ans = new ArrayList<>();
 
 		Stack<List<SnippetsVo>> stack = new Stack<>();
 		stack.push(snippets);
 
+		// please see it as a function
 		while (!stack.empty()) {
+			// As the structure of it like a functional entry
+			// so this be called 'parameter'
 			List<SnippetsVo> snippetsParam = stack.pop();
+
 			for (SnippetsVo snippetsVo : snippetsParam) {
-				if (!snippetsVo.getChildren().isEmpty()) {
-					ans.add(snippetsVo.getTitle());
+				if (!snippetsVo.getChildren().isEmpty()) { // if children is not null, then it be a directory
+					DirectoryDto directory = DirectoryDto.builder()
+						.id(snippetsVo.getSnippetID())
+						.name(snippetsVo.getTitle())
+						.build();
+
+					ans.add(directory);
 					stack.add(snippetsVo.getChildren());
 				}
 			}

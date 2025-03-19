@@ -1,12 +1,14 @@
 package com.brick.codesnippetbackend.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.brick.codesnippetbackend.dto.DirectoryDto;
 import com.brick.codesnippetbackend.dto.SimpleSnippet;
 import com.brick.codesnippetbackend.entity.Snippets;
 import com.brick.codesnippetbackend.vo.SnippetsVo;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wu-ji
@@ -18,5 +20,5 @@ public interface SnippetsService extends IService<Snippets> {
 
 	Boolean insertSnippet(SimpleSnippet simpleSnippet, String userToken);
 
-	List<String> getDirectories(@NonNull String username);
+	List<DirectoryDto> getDirectories(@NonNull String username);
 }

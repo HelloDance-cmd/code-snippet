@@ -2,13 +2,16 @@ package com.brick.codesnippetbackend.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.brick.codesnippetbackend.dto.LoginDto;
 import com.brick.codesnippetbackend.dto.RegisterDto;
-import com.brick.codesnippetbackend.vo.UserInformationVo;
+import com.brick.codesnippetbackend.entity.UserLog;
 import com.brick.codesnippetbackend.entity.Users;
+import com.brick.codesnippetbackend.service.UserLogService;
 import com.brick.codesnippetbackend.service.impl.UsersServiceImpl;
 import com.brick.codesnippetbackend.utils.JWTUtil;
 import com.brick.codesnippetbackend.vo.Result;
+import com.brick.codesnippetbackend.vo.UserInformationVo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -20,6 +23,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,11 +42,13 @@ public class UserController {
 
 	private JWTUtil jwtUtils;
 	private UsersServiceImpl usersService;
+	private UserLogService userLogService;
 
 	@Autowired
-	UserController(JWTUtil jwtUtils, UsersServiceImpl usersService) {
+	UserController(JWTUtil jwtUtils, UsersServiceImpl usersService, UserLogService userLogService) {
 		this.jwtUtils = jwtUtils;
 		this.usersService = usersService;
+		this.userLogService = userLogService;
 	}
 
 	/**
@@ -66,6 +76,8 @@ public class UserController {
 		}
 
 		log.info("User login successful");
+
+		usersService.recordUserLoginInfo(username);
 		return Result.bus(HttpStatus.OK, jwtUtils.createToken(username));
 	}
 
@@ -121,12 +133,32 @@ public class UserController {
 		String token = request.getHeader("token");
 		String username = jwtUtils.extractToken(token);
 		String email = usersService.getOne(
-				new QueryWrapper<Users>().eq("username", username)).getEmail();
+			new QueryWrapper<Users>().eq("username", username)).getEmail();
 
 		var userInfo = new UserInformationVo();
 		userInfo.setEmail(email);
 		userInfo.setUsername(username);
 
 		return Result.bus(HttpStatus.OK, userInfo);
+	}
+
+	@PostMapping("/loginLogs")
+	public HttpEntity<Result<List<Map<String, LocalDateTime>>>> getLoginLogs(HttpServletRequest request) {
+		String token = request.getHeader("token");
+		String username = jwtUtils.extractToken(token);
+
+
+		Users user = usersService.lambdaQuery().eq(Users::getUsername, username).one();
+		List<UserLog> list = userLogService.lambdaQuery().eq(UserLog::getUserId, user.getId()).list();
+
+		List<Map<String, LocalDateTime>> ans = list.stream()
+			.map(userLog -> {
+				Map<String, LocalDateTime> map = new HashMap<>();
+				String status = userLog.getStatus() == UserLog.Status.LOGIN ? "登录" : "登出";
+				map.put(status, LocalDateTime.now());
+				return map;
+			}).toList();
+
+		return Result.bus(HttpStatus.OK, ans);
 	}
 }

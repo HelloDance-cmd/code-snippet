@@ -1,8 +1,11 @@
 package com.brick.codesnippetbackend.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import lombok.Data;
+import org.junit.Test;
 
 /**
  * @TableName user_log
@@ -11,5 +14,10 @@ import lombok.Data;
 @Data
 public class UserLog {
     private Integer userId;
-    private Date loginTime;
+    private LocalDateTime time;
+    private Status status;
+
+    public enum Status {
+        LOGIN, LOGOUT
+    }
 }

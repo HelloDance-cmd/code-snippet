@@ -13,8 +13,6 @@ spring:
       max-active: 20
       max-wait: 4000
 
-
-
 token:
   secretKey: Y29kZSBzbmlwcGV0IHdlYnNpdGUgZm9yIGV2ZXJ5b25lIG9mIGRldmVsb3Blcg==
   expireTime: 2400000  # 40 * 60 * 1000 for 40min
@@ -24,5 +22,5 @@ server:
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
